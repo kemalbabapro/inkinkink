@@ -23,6 +23,8 @@ local espEnabled = false
 local glassVisionEnabled = false
 local autoDalgonaEnabled = false
 local autoTugOfWarEnabled = false
+local spinUnlockEnabled = false
+local autoWinEnabled = false
 local currentSpeed = 16
 local speeds = {16, 20, 25, 30, 35, 40, 45, 50}
 local speedIndex = 1
@@ -494,6 +496,112 @@ local function createModernGUI()
     GlassInfo.Font = Enum.Font.Gotham
     GlassInfo.TextXAlignment = Enum.TextXAlignment.Left
     
+    -- Spin Unlock Bölümü
+    local SpinFrame = Instance.new("Frame")
+    SpinFrame.Name = "SpinFrame"
+    SpinFrame.Parent = ContentFrame
+    SpinFrame.Size = UDim2.new(1, 0, 0, 120)
+    SpinFrame.Position = UDim2.new(0, 0, 0, 910)
+    SpinFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    SpinFrame.BorderSizePixel = 0
+    
+    local SpinCorner = Instance.new("UICorner")
+    SpinCorner.CornerRadius = UDim.new(0, 8)
+    SpinCorner.Parent = SpinFrame
+    
+    local SpinTitle = Instance.new("TextLabel")
+    SpinTitle.Name = "SpinTitle"
+    SpinTitle.Parent = SpinFrame
+    SpinTitle.Size = UDim2.new(1, -20, 0, 30)
+    SpinTitle.Position = UDim2.new(0, 10, 0, 10)
+    SpinTitle.BackgroundTransparency = 1
+    SpinTitle.Text = "🎰 Spin Unlock"
+    SpinTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SpinTitle.TextScaled = true
+    SpinTitle.Font = Enum.Font.GothamBold
+    SpinTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local SpinToggle = Instance.new("TextButton")
+    SpinToggle.Name = "SpinToggle"
+    SpinToggle.Parent = SpinFrame
+    SpinToggle.Size = UDim2.new(0, 100, 0, 40)
+    SpinToggle.Position = UDim2.new(1, -110, 0, 50)
+    SpinToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    SpinToggle.BorderSizePixel = 0
+    SpinToggle.Text = "KAPALI"
+    SpinToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SpinToggle.TextScaled = true
+    SpinToggle.Font = Enum.Font.GothamBold
+    
+    local SpinToggleCorner = Instance.new("UICorner")
+    SpinToggleCorner.CornerRadius = UDim.new(0, 8)
+    SpinToggleCorner.Parent = SpinToggle
+    
+    local SpinInfo = Instance.new("TextLabel")
+    SpinInfo.Name = "SpinInfo"
+    SpinInfo.Parent = SpinFrame
+    SpinInfo.Size = UDim2.new(1, -20, 0, 20)
+    SpinInfo.Position = UDim2.new(0, 10, 0, 100)
+    SpinInfo.BackgroundTransparency = 1
+    SpinInfo.Text = "Spin ile gelen özellikleri bedavaya aç"
+    SpinInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    SpinInfo.TextScaled = true
+    SpinInfo.Font = Enum.Font.Gotham
+    SpinInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Auto Win Bölümü
+    local AutoWinFrame = Instance.new("Frame")
+    AutoWinFrame.Name = "AutoWinFrame"
+    AutoWinFrame.Parent = ContentFrame
+    AutoWinFrame.Size = UDim2.new(1, 0, 0, 120)
+    AutoWinFrame.Position = UDim2.new(0, 0, 0, 1040)
+    AutoWinFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    AutoWinFrame.BorderSizePixel = 0
+    
+    local AutoWinCorner = Instance.new("UICorner")
+    AutoWinCorner.CornerRadius = UDim.new(0, 8)
+    AutoWinCorner.Parent = AutoWinFrame
+    
+    local AutoWinTitle = Instance.new("TextLabel")
+    AutoWinTitle.Name = "AutoWinTitle"
+    AutoWinTitle.Parent = AutoWinFrame
+    AutoWinTitle.Size = UDim2.new(1, -20, 0, 30)
+    AutoWinTitle.Position = UDim2.new(0, 10, 0, 10)
+    AutoWinTitle.BackgroundTransparency = 1
+    AutoWinTitle.Text = "🏆 Auto Win"
+    AutoWinTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoWinTitle.TextScaled = true
+    AutoWinTitle.Font = Enum.Font.GothamBold
+    AutoWinTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local AutoWinToggle = Instance.new("TextButton")
+    AutoWinToggle.Name = "AutoWinToggle"
+    AutoWinToggle.Parent = AutoWinFrame
+    AutoWinToggle.Size = UDim2.new(0, 100, 0, 40)
+    AutoWinToggle.Position = UDim2.new(1, -110, 0, 50)
+    AutoWinToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    AutoWinToggle.BorderSizePixel = 0
+    AutoWinToggle.Text = "KAPALI"
+    AutoWinToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoWinToggle.TextScaled = true
+    AutoWinToggle.Font = Enum.Font.GothamBold
+    
+    local AutoWinToggleCorner = Instance.new("UICorner")
+    AutoWinToggleCorner.CornerRadius = UDim.new(0, 8)
+    AutoWinToggleCorner.Parent = AutoWinToggle
+    
+    local AutoWinInfo = Instance.new("TextLabel")
+    AutoWinInfo.Name = "AutoWinInfo"
+    AutoWinInfo.Parent = AutoWinFrame
+    AutoWinInfo.Size = UDim2.new(1, -20, 0, 20)
+    AutoWinInfo.Position = UDim2.new(0, 10, 0, 100)
+    AutoWinInfo.BackgroundTransparency = 1
+    AutoWinInfo.Text = "Tüm mini oyunları otomatik kazan"
+    AutoWinInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    AutoWinInfo.TextScaled = true
+    AutoWinInfo.Font = Enum.Font.Gotham
+    AutoWinInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
     -- Footer
     local FooterFrame = Instance.new("Frame")
     FooterFrame.Name = "FooterFrame"
@@ -518,7 +626,7 @@ local function createModernGUI()
     FooterLabel.TextScaled = true
     FooterLabel.Font = Enum.Font.Gotham
     
-    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, CloseButton
+    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, CloseButton
 end
 
 -- Yeni özellik fonksiyonları
@@ -562,9 +670,32 @@ local function toggleGodMode()
             if godModeEnabled then
                 humanoid.MaxHealth = math.huge
                 humanoid.Health = math.huge
+                humanoid.WalkSpeed = currentSpeed
+                
+                -- Hasar alma event'ini engelle
+                humanoid.HealthChanged:Connect(function()
+                    if godModeEnabled then
+                        humanoid.Health = math.huge
+                    end
+                end)
             else
                 humanoid.MaxHealth = 100
                 humanoid.Health = 100
+            end
+        end
+    end
+end
+
+-- God Mode sürekli kontrol
+local function handleGodMode()
+    if not godModeEnabled then return end
+    
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            if humanoid.Health < math.huge then
+                humanoid.Health = math.huge
             end
         end
     end
@@ -647,55 +778,114 @@ local function toggleESP()
     end
 end
 
--- Noclip Fonksiyonu
-local function toggleNoclip()
-    noclipEnabled = not noclipEnabled
+-- Spin Unlock Fonksiyonu
+local function toggleSpinUnlock()
+    spinUnlockEnabled = not spinUnlockEnabled
     
-    if noclipEnabled then
-        -- Noclip'i aç
-        local character = player.Character
-        if character then
-            for _, part in pairs(character:GetChildren()) do
-                if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-                    part.CanCollide = false
-                end
-            end
-            
-            -- HumanoidRootPart'ı da kontrol et
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-            if humanoidRootPart then
-                humanoidRootPart.CanCollide = false
+    if spinUnlockEnabled then
+        -- Spin wheel'i bul ve tüm ödülleri aç
+        local workspace = game:GetService("Workspace")
+        local spinWheel = workspace:FindFirstChild("SpinWheel") or workspace:FindFirstChild("Wheel") or workspace:FindFirstChild("LuckyWheel")
+        
+        if spinWheel then
+            -- Spin wheel'e tıkla
+            local clickDetector = spinWheel:FindFirstChild("ClickDetector")
+            if clickDetector then
+                fireclickdetector(clickDetector)
             end
         end
         
-        -- Karakter spawn olduğunda noclip'i yeniden uygula
-        player.CharacterAdded:Connect(function(character)
-            if noclipEnabled then
-                wait(1) -- Karakterin yüklenmesini bekle
-                for _, part in pairs(character:GetChildren()) do
-                    if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-                        part.CanCollide = false
-                    end
-                end
-                local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-                if humanoidRootPart then
-                    humanoidRootPart.CanCollide = false
-                end
-            end
-        end)
-    else
-        -- Noclip'i kapat
-        local character = player.Character
-        if character then
-            for _, part in pairs(character:GetChildren()) do
-                if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-                    part.CanCollide = true
+        -- PlayerGui'de spin ile ilgili GUI'leri kontrol et
+        local playerGui = player.PlayerGui
+        for _, gui in pairs(playerGui:GetChildren()) do
+            if gui.Name:lower():find("spin") or gui.Name:lower():find("wheel") or gui.Name:lower():find("lucky") then
+                -- Spin GUI'sini aç
+                gui.Enabled = true
+                
+                -- Spin butonunu bul ve tıkla
+                local spinButton = gui:FindFirstChild("SpinButton") or gui:FindFirstChild("Spin") or gui:FindFirstChild("Play")
+                if spinButton and spinButton:IsA("TextButton") then
+                    spinButton.Activated:Fire()
                 end
             end
-            
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-            if humanoidRootPart then
-                humanoidRootPart.CanCollide = true
+        end
+        
+        -- ReplicatedStorage'da spin ile ilgili RemoteEvent'leri kontrol et
+        local replicatedStorage = game:GetService("ReplicatedStorage")
+        for _, obj in pairs(replicatedStorage:GetChildren()) do
+            if obj.Name:lower():find("spin") or obj.Name:lower():find("wheel") or obj.Name:lower():find("lucky") then
+                if obj:IsA("RemoteEvent") then
+                    obj:FireServer()
+                elseif obj:IsA("RemoteFunction") then
+                    obj:InvokeServer()
+                end
+            end
+        end
+    end
+end
+
+-- Auto Win Fonksiyonu
+local function toggleAutoWin()
+    autoWinEnabled = not autoWinEnabled
+end
+
+-- Auto Win sürekli kontrol
+local function handleAutoWin()
+    if not autoWinEnabled then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    -- Red Light Green Light
+    if humanoid.MoveDirection.Magnitude > 0 then
+        teleportToFinish()
+    end
+    
+    -- Dalgona oyunu için otomatik tamamlama
+    local workspace = game:GetService("Workspace")
+    local dalgona = workspace:FindFirstChild("Dalgona") or workspace:FindFirstChild("Cookie")
+    if dalgona then
+        -- Dalgona oyununu otomatik tamamla
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if humanoidRootPart then
+            humanoidRootPart.CFrame = dalgona.CFrame + Vector3.new(0, 5, 0)
+        end
+    end
+    
+    -- Tug of War için otomatik kazanma
+    local tugOfWar = workspace:FindFirstChild("TugOfWar") or workspace:FindFirstChild("Rope")
+    if tugOfWar then
+        -- Tug of War oyununu otomatik kazan
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if humanoidRootPart then
+            humanoidRootPart.CFrame = tugOfWar.CFrame + Vector3.new(0, 5, 0)
+        end
+    end
+    
+    -- Jump Rope için otomatik zıplama
+    local jumpRope = workspace:FindFirstChild("JumpRope") or workspace:FindFirstChild("Rope")
+    if jumpRope then
+        humanoid.Jump = true
+    end
+end
+
+-- Noclip Fonksiyonu
+local function toggleNoclip()
+    noclipEnabled = not noclipEnabled
+end
+
+-- Noclip sürekli kontrol
+local function handleNoclip()
+    if not noclipEnabled then return end
+    
+    local character = player.Character
+    if character then
+        for _, part in pairs(character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
             end
         end
     end
@@ -758,12 +948,27 @@ local function changeSpeed()
         local humanoid = character:FindFirstChild("Humanoid")
         if humanoid then
             humanoid.WalkSpeed = currentSpeed
+            humanoid.JumpPower = 50 -- Zıplama gücünü de ayarla
+        end
+    end
+end
+
+-- Hız sürekli kontrol
+local function handleSpeed()
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            -- Hız değişirse tekrar ayarla
+            if humanoid.WalkSpeed ~= currentSpeed then
+                humanoid.WalkSpeed = currentSpeed
+            end
         end
     end
 end
 
 -- Ana GUI oluşturma ve event'leri bağlama
-local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, CloseButton = createModernGUI()
+local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, CloseButton = createModernGUI()
 
 -- Noclip toggle event
 NoclipToggle.MouseButton1Click:Connect(function()
@@ -929,6 +1134,54 @@ GlassToggle.MouseButton1Click:Connect(function()
     end
 end)
 
+-- Spin Unlock toggle event
+SpinToggle.MouseButton1Click:Connect(function()
+    toggleSpinUnlock()
+    
+    if spinUnlockEnabled then
+        SpinToggle.Text = "AÇIK"
+        SpinToggle.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        
+        local tween = TweenService:Create(SpinToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 110, 0, 45)
+        })
+        tween:Play()
+        tween.Completed:Connect(function()
+            local tween2 = TweenService:Create(SpinToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 100, 0, 40)
+            })
+            tween2:Play()
+        end)
+    else
+        SpinToggle.Text = "KAPALI"
+        SpinToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    end
+end)
+
+-- Auto Win toggle event
+AutoWinToggle.MouseButton1Click:Connect(function()
+    toggleAutoWin()
+    
+    if autoWinEnabled then
+        AutoWinToggle.Text = "AÇIK"
+        AutoWinToggle.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        
+        local tween = TweenService:Create(AutoWinToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 110, 0, 45)
+        })
+        tween:Play()
+        tween.Completed:Connect(function()
+            local tween2 = TweenService:Create(AutoWinToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 100, 0, 40)
+            })
+            tween2:Play()
+        end)
+    else
+        AutoWinToggle.Text = "KAPALI"
+        AutoWinToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    end
+end)
+
 -- Kapatma butonu event
 CloseButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
@@ -956,6 +1209,10 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         toggleGlassVision()
     elseif input.KeyCode == Enum.KeyCode.F9 then
         toggleESP()
+    elseif input.KeyCode == Enum.KeyCode.F10 then
+        toggleSpinUnlock()
+    elseif input.KeyCode == Enum.KeyCode.F11 then
+        toggleAutoWin()
     end
 end)
 
@@ -969,15 +1226,37 @@ local function checkForRedLight()
     local humanoid = character:FindFirstChild("Humanoid")
     if not humanoid then return end
     
-    -- Eğer karakter hareket ediyorsa ve red light varsa teleport et
-    if humanoid.MoveDirection.Magnitude > 0 then
-        -- Red light algılama (basit versiyon)
-        local workspace = game:GetService("Workspace")
-        local redLight = workspace:FindFirstChild("RedLight") or workspace:FindFirstChild("Red Light")
-        
-        if redLight then
-            teleportToFinish()
+    -- Red light algılama - daha kapsamlı
+    local workspace = game:GetService("Workspace")
+    local redLight = nil
+    
+    -- Farklı red light isimlerini kontrol et
+    for _, obj in pairs(workspace:GetChildren()) do
+        local name = obj.Name:lower()
+        if name:find("red") and (name:find("light") or name:find("lamp")) then
+            redLight = obj
+            break
         end
+    end
+    
+    -- Eğer red light bulunamazsa, oyun durumunu kontrol et
+    if not redLight then
+        -- Oyun durumunu kontrol et (genellikle bir GUI veya değer olur)
+        local gameGui = player.PlayerGui:FindFirstChild("GameGui") or player.PlayerGui:FindFirstChild("MainGui")
+        if gameGui then
+            local statusLabel = gameGui:FindFirstChild("Status") or gameGui:FindFirstChild("GameStatus")
+            if statusLabel and statusLabel:IsA("TextLabel") then
+                local text = statusLabel.Text:lower()
+                if text:find("red") or text:find("stop") or text:find("don't move") then
+                    redLight = true -- Red light aktif
+                end
+            end
+        end
+    end
+    
+    -- Eğer karakter hareket ediyorsa ve red light varsa teleport et
+    if redLight and humanoid.MoveDirection.Magnitude > 0 then
+        teleportToFinish()
     end
 end
 
@@ -1038,26 +1317,47 @@ RunService.Heartbeat:Connect(function()
     checkForRedLight()
     handleFly()
     handleInfiniteJump()
+    handleNoclip()
+    handleGodMode()
+    handleSpeed()
+    handleAutoWin()
 end)
 
--- Karakter spawn olduğunda hızı ayarla
+-- Karakter spawn olduğunda ayarları uygula
 player.CharacterAdded:Connect(function(character)
     wait(1)
     local humanoid = character:FindFirstChild("Humanoid")
     if humanoid then
         humanoid.WalkSpeed = currentSpeed
+        humanoid.JumpPower = 50
+    end
+    
+    -- Noclip'i yeniden uygula
+    if noclipEnabled then
+        for _, part in pairs(character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+    
+    -- God Mode'u yeniden uygula
+    if godModeEnabled and humanoid then
+        humanoid.MaxHealth = math.huge
+        humanoid.Health = math.huge
     end
 end)
 
--- Mevcut karakter için hızı ayarla
+-- Mevcut karakter için ayarları uygula
 if player.Character then
     local humanoid = player.Character:FindFirstChild("Humanoid")
     if humanoid then
         humanoid.WalkSpeed = currentSpeed
+        humanoid.JumpPower = 50
     end
 end
 
-print("🎨 Ink Game Hack v2.0 yüklendi!")
+print("🎨 Ink Game Hack v2.1 yüklendi!")
 print("=== KLAVYE KISAYOLLARI ===")
 print("F1 - Menüyü aç/kapat")
 print("F2 - Noclip aç/kapat")
@@ -1068,6 +1368,8 @@ print("F6 - Sonsuz zıplama aç/kapat")
 print("F7 - God Mode aç/kapat")
 print("F8 - Glass Vision aç/kapat")
 print("F9 - ESP aç/kapat")
+print("F10 - Spin Unlock aç/kapat")
+print("F11 - Auto Win aç/kapat")
 print("=== ÖZELLİKLER ===")
 print("✅ Noclip - Duvarlardan geçme")
 print("✅ Teleport - Red Light Green Light'ta ışınlanma")
@@ -1077,6 +1379,11 @@ print("✅ God Mode - Ölümsüzlük")
 print("✅ Glass Vision - Güvenli cam panellerini gösterme")
 print("✅ ESP - Diğer oyuncuları görme")
 print("✅ Hız Ayarı - 16-50 arası hız seçenekleri")
+print("✅ Spin Unlock - Spin ile gelen özellikleri bedavaya aç")
+print("✅ Auto Win - Tüm mini oyunları otomatik kazan")
+print("=== YENİ ÖZELLİKLER ===")
+print("🎰 Spin Unlock - Spin wheel ödüllerini bedavaya aç")
+print("🏆 Auto Win - Red Light, Dalgona, Tug of War, Jump Rope")
 print("=== KULLANIM ===")
 print("Menüyü açmak için F1 tuşuna basın!")
 print("Tüm özellikler modern GUI ile kontrol edilebilir.")
