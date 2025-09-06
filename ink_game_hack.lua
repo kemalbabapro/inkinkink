@@ -26,6 +26,9 @@ local autoTugOfWarEnabled = false
 local spinUnlockEnabled = false
 local autoWinEnabled = false
 local rollAbilitiesEnabled = false
+local autoFarmEnabled = false
+local autoCollectEnabled = false
+local noFallDamageEnabled = false
 local currentRollAbility = "None"
 local currentSpeed = 16
 local speeds = {16, 20, 25, 30, 35, 40, 45, 50}
@@ -125,14 +128,67 @@ local function createModernGUI()
     ContentFrame.BorderSizePixel = 0
     ContentFrame.ScrollBarThickness = 6
     ContentFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
-    ContentFrame.CanvasSize = UDim2.new(0, 0, 0, 1200)
+    ContentFrame.CanvasSize = UDim2.new(0, 0, 0, 1600)
     
-    -- Noclip Bölümü
+    -- Kategori Başlıkları
+    -- Roll Abilities Kategorisi
+    local RollCategoryTitle = Instance.new("TextLabel")
+    RollCategoryTitle.Name = "RollCategoryTitle"
+    RollCategoryTitle.Parent = ContentFrame
+    RollCategoryTitle.Size = UDim2.new(1, -20, 0, 30)
+    RollCategoryTitle.Position = UDim2.new(0, 10, 0, 0)
+    RollCategoryTitle.BackgroundTransparency = 1
+    RollCategoryTitle.Text = "🎲 ROLL ABILITIES"
+    RollCategoryTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    RollCategoryTitle.TextScaled = true
+    RollCategoryTitle.Font = Enum.Font.GothamBold
+    RollCategoryTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Movement Kategorisi
+    local MovementCategoryTitle = Instance.new("TextLabel")
+    MovementCategoryTitle.Name = "MovementCategoryTitle"
+    MovementCategoryTitle.Parent = ContentFrame
+    MovementCategoryTitle.Size = UDim2.new(1, -20, 0, 30)
+    MovementCategoryTitle.Position = UDim2.new(0, 10, 0, 120)
+    MovementCategoryTitle.BackgroundTransparency = 1
+    MovementCategoryTitle.Text = "🏃 MOVEMENT"
+    MovementCategoryTitle.TextColor3 = Color3.fromRGB(0, 255, 0)
+    MovementCategoryTitle.TextScaled = true
+    MovementCategoryTitle.Font = Enum.Font.GothamBold
+    MovementCategoryTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Combat Kategorisi
+    local CombatCategoryTitle = Instance.new("TextLabel")
+    CombatCategoryTitle.Name = "CombatCategoryTitle"
+    CombatCategoryTitle.Parent = ContentFrame
+    CombatCategoryTitle.Size = UDim2.new(1, -20, 0, 30)
+    CombatCategoryTitle.Position = UDim2.new(0, 10, 0, 520)
+    CombatCategoryTitle.BackgroundTransparency = 1
+    CombatCategoryTitle.Text = "⚔️ COMBAT & UTILITY"
+    CombatCategoryTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
+    CombatCategoryTitle.TextScaled = true
+    CombatCategoryTitle.Font = Enum.Font.GothamBold
+    CombatCategoryTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Game Features Kategorisi
+    local GameCategoryTitle = Instance.new("TextLabel")
+    GameCategoryTitle.Name = "GameCategoryTitle"
+    GameCategoryTitle.Parent = ContentFrame
+    GameCategoryTitle.Size = UDim2.new(1, -20, 0, 30)
+    GameCategoryTitle.Position = UDim2.new(0, 10, 0, 910)
+    GameCategoryTitle.BackgroundTransparency = 1
+    GameCategoryTitle.Text = "🎮 GAME FEATURES"
+    GameCategoryTitle.TextColor3 = Color3.fromRGB(100, 150, 255)
+    GameCategoryTitle.TextScaled = true
+    GameCategoryTitle.Font = Enum.Font.GothamBold
+    GameCategoryTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Noclip Bölümü (Movement Kategorisi)
     local NoclipFrame = Instance.new("Frame")
     NoclipFrame.Name = "NoclipFrame"
     NoclipFrame.Parent = ContentFrame
     NoclipFrame.Size = UDim2.new(1, 0, 0, 120)
-    NoclipFrame.Position = UDim2.new(0, 0, 0, 0)
+    NoclipFrame.Position = UDim2.new(0, 0, 0, 150)
     NoclipFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     NoclipFrame.BorderSizePixel = 0
     
@@ -180,12 +236,12 @@ local function createModernGUI()
     NoclipInfo.Font = Enum.Font.Gotham
     NoclipInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Teleport Bölümü
+    -- Teleport Bölümü (Movement Kategorisi)
     local TeleportFrame = Instance.new("Frame")
     TeleportFrame.Name = "TeleportFrame"
     TeleportFrame.Parent = ContentFrame
     TeleportFrame.Size = UDim2.new(1, 0, 0, 120)
-    TeleportFrame.Position = UDim2.new(0, 0, 0, 130)
+    TeleportFrame.Position = UDim2.new(0, 0, 0, 280)
     TeleportFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     TeleportFrame.BorderSizePixel = 0
     
@@ -233,12 +289,12 @@ local function createModernGUI()
     TeleportInfo.Font = Enum.Font.Gotham
     TeleportInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Hız Ayarı Bölümü
+    -- Hız Ayarı Bölümü (Movement Kategorisi)
     local SpeedFrame = Instance.new("Frame")
     SpeedFrame.Name = "SpeedFrame"
     SpeedFrame.Parent = ContentFrame
     SpeedFrame.Size = UDim2.new(1, 0, 0, 120)
-    SpeedFrame.Position = UDim2.new(0, 0, 0, 260)
+    SpeedFrame.Position = UDim2.new(0, 0, 0, 410)
     SpeedFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     SpeedFrame.BorderSizePixel = 0
     
@@ -286,12 +342,12 @@ local function createModernGUI()
     SpeedInfo.Font = Enum.Font.Gotham
     SpeedInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Uçma Modu Bölümü
+    -- Uçma Modu Bölümü (Movement Kategorisi)
     local FlyFrame = Instance.new("Frame")
     FlyFrame.Name = "FlyFrame"
     FlyFrame.Parent = ContentFrame
     FlyFrame.Size = UDim2.new(1, 0, 0, 120)
-    FlyFrame.Position = UDim2.new(0, 0, 0, 390)
+    FlyFrame.Position = UDim2.new(0, 0, 0, 540)
     FlyFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     FlyFrame.BorderSizePixel = 0
     
@@ -339,12 +395,12 @@ local function createModernGUI()
     FlyInfo.Font = Enum.Font.Gotham
     FlyInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Sonsuz Zıplama Bölümü
+    -- Sonsuz Zıplama Bölümü (Movement Kategorisi)
     local JumpFrame = Instance.new("Frame")
     JumpFrame.Name = "JumpFrame"
     JumpFrame.Parent = ContentFrame
     JumpFrame.Size = UDim2.new(1, 0, 0, 120)
-    JumpFrame.Position = UDim2.new(0, 0, 0, 520)
+    JumpFrame.Position = UDim2.new(0, 0, 0, 670)
     JumpFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     JumpFrame.BorderSizePixel = 0
     
@@ -392,12 +448,12 @@ local function createModernGUI()
     JumpInfo.Font = Enum.Font.Gotham
     JumpInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- God Mode Bölümü
+    -- God Mode Bölümü (Combat Kategorisi)
     local GodFrame = Instance.new("Frame")
     GodFrame.Name = "GodFrame"
     GodFrame.Parent = ContentFrame
     GodFrame.Size = UDim2.new(1, 0, 0, 120)
-    GodFrame.Position = UDim2.new(0, 0, 0, 650)
+    GodFrame.Position = UDim2.new(0, 0, 0, 550)
     GodFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     GodFrame.BorderSizePixel = 0
     
@@ -445,12 +501,12 @@ local function createModernGUI()
     GodInfo.Font = Enum.Font.Gotham
     GodInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Glass Vision Bölümü
+    -- Glass Vision Bölümü (Combat Kategorisi)
     local GlassFrame = Instance.new("Frame")
     GlassFrame.Name = "GlassFrame"
     GlassFrame.Parent = ContentFrame
     GlassFrame.Size = UDim2.new(1, 0, 0, 120)
-    GlassFrame.Position = UDim2.new(0, 0, 0, 780)
+    GlassFrame.Position = UDim2.new(0, 0, 0, 680)
     GlassFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     GlassFrame.BorderSizePixel = 0
     
@@ -498,12 +554,65 @@ local function createModernGUI()
     GlassInfo.Font = Enum.Font.Gotham
     GlassInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Spin Unlock Bölümü
+    -- ESP Bölümü (Combat Kategorisi)
+    local ESPFrame = Instance.new("Frame")
+    ESPFrame.Name = "ESPFrame"
+    ESPFrame.Parent = ContentFrame
+    ESPFrame.Size = UDim2.new(1, 0, 0, 120)
+    ESPFrame.Position = UDim2.new(0, 0, 0, 810)
+    ESPFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    ESPFrame.BorderSizePixel = 0
+    
+    local ESPCorner = Instance.new("UICorner")
+    ESPCorner.CornerRadius = UDim.new(0, 8)
+    ESPCorner.Parent = ESPFrame
+    
+    local ESPTitle = Instance.new("TextLabel")
+    ESPTitle.Name = "ESPTitle"
+    ESPTitle.Parent = ESPFrame
+    ESPTitle.Size = UDim2.new(1, -20, 0, 30)
+    ESPTitle.Position = UDim2.new(0, 10, 0, 10)
+    ESPTitle.BackgroundTransparency = 1
+    ESPTitle.Text = "👁️ ESP"
+    ESPTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ESPTitle.TextScaled = true
+    ESPTitle.Font = Enum.Font.GothamBold
+    ESPTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local ESPToggle = Instance.new("TextButton")
+    ESPToggle.Name = "ESPToggle"
+    ESPToggle.Parent = ESPFrame
+    ESPToggle.Size = UDim2.new(0, 100, 0, 40)
+    ESPToggle.Position = UDim2.new(1, -110, 0, 50)
+    ESPToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    ESPToggle.BorderSizePixel = 0
+    ESPToggle.Text = "KAPALI"
+    ESPToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ESPToggle.TextScaled = true
+    ESPToggle.Font = Enum.Font.GothamBold
+    
+    local ESPToggleCorner = Instance.new("UICorner")
+    ESPToggleCorner.CornerRadius = UDim.new(0, 8)
+    ESPToggleCorner.Parent = ESPToggle
+    
+    local ESPInfo = Instance.new("TextLabel")
+    ESPInfo.Name = "ESPInfo"
+    ESPInfo.Parent = ESPFrame
+    ESPInfo.Size = UDim2.new(1, -20, 0, 20)
+    ESPInfo.Position = UDim2.new(0, 10, 0, 100)
+    ESPInfo.BackgroundTransparency = 1
+    ESPInfo.Text = "Diğer oyuncuları duvarların arkasından gör"
+    ESPInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    ESPInfo.TextScaled = true
+    ESPInfo.Font = Enum.Font.Gotham
+    ESPInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Spin Unlock Bölümü (Game Features Kategorisi)
     local SpinFrame = Instance.new("Frame")
     SpinFrame.Name = "SpinFrame"
     SpinFrame.Parent = ContentFrame
     SpinFrame.Size = UDim2.new(1, 0, 0, 120)
-    SpinFrame.Position = UDim2.new(0, 0, 0, 910)
+    SpinFrame.Position = UDim2.new(0, 0, 0, 940)
     SpinFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     SpinFrame.BorderSizePixel = 0
     
@@ -551,12 +660,12 @@ local function createModernGUI()
     SpinInfo.Font = Enum.Font.Gotham
     SpinInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Auto Win Bölümü
+    -- Auto Win Bölümü (Game Features Kategorisi)
     local AutoWinFrame = Instance.new("Frame")
     AutoWinFrame.Name = "AutoWinFrame"
     AutoWinFrame.Parent = ContentFrame
     AutoWinFrame.Size = UDim2.new(1, 0, 0, 120)
-    AutoWinFrame.Position = UDim2.new(0, 0, 0, 1040)
+    AutoWinFrame.Position = UDim2.new(0, 0, 0, 1070)
     AutoWinFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     AutoWinFrame.BorderSizePixel = 0
     
@@ -604,12 +713,215 @@ local function createModernGUI()
     AutoWinInfo.Font = Enum.Font.Gotham
     AutoWinInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Roll Abilities Bölümü
+    -- Auto Farm Bölümü (Game Features Kategorisi)
+    local AutoFarmFrame = Instance.new("Frame")
+    AutoFarmFrame.Name = "AutoFarmFrame"
+    AutoFarmFrame.Parent = ContentFrame
+    AutoFarmFrame.Size = UDim2.new(1, 0, 0, 120)
+    AutoFarmFrame.Position = UDim2.new(0, 0, 0, 1200)
+    AutoFarmFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    AutoFarmFrame.BorderSizePixel = 0
+    
+    local AutoFarmCorner = Instance.new("UICorner")
+    AutoFarmCorner.CornerRadius = UDim.new(0, 8)
+    AutoFarmCorner.Parent = AutoFarmFrame
+    
+    local AutoFarmTitle = Instance.new("TextLabel")
+    AutoFarmTitle.Name = "AutoFarmTitle"
+    AutoFarmTitle.Parent = AutoFarmFrame
+    AutoFarmTitle.Size = UDim2.new(1, -20, 0, 30)
+    AutoFarmTitle.Position = UDim2.new(0, 10, 0, 10)
+    AutoFarmTitle.BackgroundTransparency = 1
+    AutoFarmTitle.Text = "🌾 Auto Farm"
+    AutoFarmTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoFarmTitle.TextScaled = true
+    AutoFarmTitle.Font = Enum.Font.GothamBold
+    AutoFarmTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local AutoFarmToggle = Instance.new("TextButton")
+    AutoFarmToggle.Name = "AutoFarmToggle"
+    AutoFarmToggle.Parent = AutoFarmFrame
+    AutoFarmToggle.Size = UDim2.new(0, 100, 0, 40)
+    AutoFarmToggle.Position = UDim2.new(1, -110, 0, 50)
+    AutoFarmToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    AutoFarmToggle.BorderSizePixel = 0
+    AutoFarmToggle.Text = "KAPALI"
+    AutoFarmToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoFarmToggle.TextScaled = true
+    AutoFarmToggle.Font = Enum.Font.GothamBold
+    
+    local AutoFarmToggleCorner = Instance.new("UICorner")
+    AutoFarmToggleCorner.CornerRadius = UDim.new(0, 8)
+    AutoFarmToggleCorner.Parent = AutoFarmToggle
+    
+    local AutoFarmInfo = Instance.new("TextLabel")
+    AutoFarmInfo.Name = "AutoFarmInfo"
+    AutoFarmInfo.Parent = AutoFarmFrame
+    AutoFarmInfo.Size = UDim2.new(1, -20, 0, 20)
+    AutoFarmInfo.Position = UDim2.new(0, 10, 0, 100)
+    AutoFarmInfo.BackgroundTransparency = 1
+    AutoFarmInfo.Text = "Otomatik para ve item toplama"
+    AutoFarmInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    AutoFarmInfo.TextScaled = true
+    AutoFarmInfo.Font = Enum.Font.Gotham
+    AutoFarmInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Auto Collect Bölümü (Game Features Kategorisi)
+    local AutoCollectFrame = Instance.new("Frame")
+    AutoCollectFrame.Name = "AutoCollectFrame"
+    AutoCollectFrame.Parent = ContentFrame
+    AutoCollectFrame.Size = UDim2.new(1, 0, 0, 120)
+    AutoCollectFrame.Position = UDim2.new(0, 0, 0, 1330)
+    AutoCollectFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    AutoCollectFrame.BorderSizePixel = 0
+    
+    local AutoCollectCorner = Instance.new("UICorner")
+    AutoCollectCorner.CornerRadius = UDim.new(0, 8)
+    AutoCollectCorner.Parent = AutoCollectFrame
+    
+    local AutoCollectTitle = Instance.new("TextLabel")
+    AutoCollectTitle.Name = "AutoCollectTitle"
+    AutoCollectTitle.Parent = AutoCollectFrame
+    AutoCollectTitle.Size = UDim2.new(1, -20, 0, 30)
+    AutoCollectTitle.Position = UDim2.new(0, 10, 0, 10)
+    AutoCollectTitle.BackgroundTransparency = 1
+    AutoCollectTitle.Text = "💎 Auto Collect"
+    AutoCollectTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoCollectTitle.TextScaled = true
+    AutoCollectTitle.Font = Enum.Font.GothamBold
+    AutoCollectTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local AutoCollectToggle = Instance.new("TextButton")
+    AutoCollectToggle.Name = "AutoCollectToggle"
+    AutoCollectToggle.Parent = AutoCollectFrame
+    AutoCollectToggle.Size = UDim2.new(0, 100, 0, 40)
+    AutoCollectToggle.Position = UDim2.new(1, -110, 0, 50)
+    AutoCollectToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    AutoCollectToggle.BorderSizePixel = 0
+    AutoCollectToggle.Text = "KAPALI"
+    AutoCollectToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoCollectToggle.TextScaled = true
+    AutoCollectToggle.Font = Enum.Font.GothamBold
+    
+    local AutoCollectToggleCorner = Instance.new("UICorner")
+    AutoCollectToggleCorner.CornerRadius = UDim.new(0, 8)
+    AutoCollectToggleCorner.Parent = AutoCollectToggle
+    
+    local AutoCollectInfo = Instance.new("TextLabel")
+    AutoCollectInfo.Name = "AutoCollectInfo"
+    AutoCollectInfo.Parent = AutoCollectFrame
+    AutoCollectInfo.Size = UDim2.new(1, -20, 0, 20)
+    AutoCollectInfo.Position = UDim2.new(0, 10, 0, 100)
+    AutoCollectInfo.BackgroundTransparency = 1
+    AutoCollectInfo.Text = "Otomatik item ve coin toplama"
+    AutoCollectInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    AutoCollectInfo.TextScaled = true
+    AutoCollectInfo.Font = Enum.Font.Gotham
+    AutoCollectInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- No Fall Damage Bölümü (Combat Kategorisi)
+    local NoFallFrame = Instance.new("Frame")
+    NoFallFrame.Name = "NoFallFrame"
+    NoFallFrame.Parent = ContentFrame
+    NoFallFrame.Size = UDim2.new(1, 0, 0, 120)
+    NoFallFrame.Position = UDim2.new(0, 0, 0, 1460)
+    NoFallFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    NoFallFrame.BorderSizePixel = 0
+    
+    local NoFallCorner = Instance.new("UICorner")
+    NoFallCorner.CornerRadius = UDim.new(0, 8)
+    NoFallCorner.Parent = NoFallFrame
+    
+    local NoFallTitle = Instance.new("TextLabel")
+    NoFallTitle.Name = "NoFallTitle"
+    NoFallTitle.Parent = NoFallFrame
+    NoFallTitle.Size = UDim2.new(1, -20, 0, 30)
+    NoFallTitle.Position = UDim2.new(0, 10, 0, 10)
+    NoFallTitle.BackgroundTransparency = 1
+    NoFallTitle.Text = "🛡️ No Fall Damage"
+    NoFallTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NoFallTitle.TextScaled = true
+    NoFallTitle.Font = Enum.Font.GothamBold
+    NoFallTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local NoFallToggle = Instance.new("TextButton")
+    NoFallToggle.Name = "NoFallToggle"
+    NoFallToggle.Parent = NoFallFrame
+    NoFallToggle.Size = UDim2.new(0, 100, 0, 40)
+    NoFallToggle.Position = UDim2.new(1, -110, 0, 50)
+    NoFallToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    NoFallToggle.BorderSizePixel = 0
+    NoFallToggle.Text = "KAPALI"
+    NoFallToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NoFallToggle.TextScaled = true
+    NoFallToggle.Font = Enum.Font.GothamBold
+    
+    local NoFallToggleCorner = Instance.new("UICorner")
+    NoFallToggleCorner.CornerRadius = UDim.new(0, 8)
+    NoFallToggleCorner.Parent = NoFallToggle
+    
+    local NoFallInfo = Instance.new("TextLabel")
+    NoFallInfo.Name = "NoFallInfo"
+    NoFallInfo.Parent = NoFallFrame
+    NoFallInfo.Size = UDim2.new(1, -20, 0, 20)
+    NoFallInfo.Position = UDim2.new(0, 10, 0, 100)
+    NoFallInfo.BackgroundTransparency = 1
+    NoFallInfo.Text = "Yüksekten düşme hasarı almaz"
+    NoFallInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    NoFallInfo.TextScaled = true
+    NoFallInfo.Font = Enum.Font.Gotham
+    NoFallInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local AutoWinCorner = Instance.new("UICorner")
+    AutoWinCorner.CornerRadius = UDim.new(0, 8)
+    AutoWinCorner.Parent = AutoWinFrame
+    
+    local AutoWinTitle = Instance.new("TextLabel")
+    AutoWinTitle.Name = "AutoWinTitle"
+    AutoWinTitle.Parent = AutoWinFrame
+    AutoWinTitle.Size = UDim2.new(1, -20, 0, 30)
+    AutoWinTitle.Position = UDim2.new(0, 10, 0, 10)
+    AutoWinTitle.BackgroundTransparency = 1
+    AutoWinTitle.Text = "🏆 Auto Win"
+    AutoWinTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoWinTitle.TextScaled = true
+    AutoWinTitle.Font = Enum.Font.GothamBold
+    AutoWinTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local AutoWinToggle = Instance.new("TextButton")
+    AutoWinToggle.Name = "AutoWinToggle"
+    AutoWinToggle.Parent = AutoWinFrame
+    AutoWinToggle.Size = UDim2.new(0, 100, 0, 40)
+    AutoWinToggle.Position = UDim2.new(1, -110, 0, 50)
+    AutoWinToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    AutoWinToggle.BorderSizePixel = 0
+    AutoWinToggle.Text = "KAPALI"
+    AutoWinToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoWinToggle.TextScaled = true
+    AutoWinToggle.Font = Enum.Font.GothamBold
+    
+    local AutoWinToggleCorner = Instance.new("UICorner")
+    AutoWinToggleCorner.CornerRadius = UDim.new(0, 8)
+    AutoWinToggleCorner.Parent = AutoWinToggle
+    
+    local AutoWinInfo = Instance.new("TextLabel")
+    AutoWinInfo.Name = "AutoWinInfo"
+    AutoWinInfo.Parent = AutoWinFrame
+    AutoWinInfo.Size = UDim2.new(1, -20, 0, 20)
+    AutoWinInfo.Position = UDim2.new(0, 10, 0, 100)
+    AutoWinInfo.BackgroundTransparency = 1
+    AutoWinInfo.Text = "Tüm mini oyunları otomatik kazan"
+    AutoWinInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    AutoWinInfo.TextScaled = true
+    AutoWinInfo.Font = Enum.Font.Gotham
+    AutoWinInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- Roll Abilities Bölümü (En Üstte)
     local RollFrame = Instance.new("Frame")
     RollFrame.Name = "RollFrame"
     RollFrame.Parent = ContentFrame
     RollFrame.Size = UDim2.new(1, 0, 0, 120)
-    RollFrame.Position = UDim2.new(0, 0, 0, 1170)
+    RollFrame.Position = UDim2.new(0, 0, 0, 0)
     RollFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     RollFrame.BorderSizePixel = 0
     
@@ -657,22 +969,6 @@ local function createModernGUI()
     RollInfo.Font = Enum.Font.Gotham
     RollInfo.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- Console Butonu
-    local ConsoleButton = Instance.new("TextButton")
-    ConsoleButton.Name = "ConsoleButton"
-    ConsoleButton.Parent = MainFrame
-    ConsoleButton.Size = UDim2.new(0, 80, 0, 30)
-    ConsoleButton.Position = UDim2.new(1, -90, 0, 10)
-    ConsoleButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-    ConsoleButton.BorderSizePixel = 0
-    ConsoleButton.Text = "Console"
-    ConsoleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ConsoleButton.TextScaled = true
-    ConsoleButton.Font = Enum.Font.GothamBold
-    
-    local ConsoleCorner = Instance.new("UICorner")
-    ConsoleCorner.CornerRadius = UDim.new(0, 6)
-    ConsoleCorner.Parent = ConsoleButton
     
     -- Roll Abilities Menüsü
     local RollMenuFrame = Instance.new("Frame")
@@ -797,7 +1093,7 @@ local function createModernGUI()
     FooterLabel.TextScaled = true
     FooterLabel.Font = Enum.Font.Gotham
     
-    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, ConsoleButton, RollMenuFrame, rollAbilityButtons, EquipAllButton, RollMenuClose, CloseButton
+    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, ESPToggle, SpinToggle, AutoWinToggle, AutoFarmToggle, AutoCollectToggle, NoFallToggle, RollDropdown, RollMenuFrame, rollAbilityButtons, EquipAllButton, RollMenuClose, CloseButton
 end
 
 -- Roll Abilities Listesi
@@ -1009,11 +1305,22 @@ local function equipAllRollAbilities()
     print("🎯 ALL Roll Abilities Equipped!")
 end
 
--- Console Açma Fonksiyonu
-local function openConsole()
-    local StarterGui = game:GetService("StarterGui")
-    StarterGui:SetCore("DevConsoleVisible", true)
-    print("🖥️ Console açıldı! F9 ile kapatabilirsiniz.")
+-- Auto Farm Fonksiyonu
+local function toggleAutoFarm()
+    autoFarmEnabled = not autoFarmEnabled
+    print("🌾 Auto Farm:", autoFarmEnabled and "AÇIK" or "KAPALI")
+end
+
+-- Auto Collect Fonksiyonu
+local function toggleAutoCollect()
+    autoCollectEnabled = not autoCollectEnabled
+    print("💎 Auto Collect:", autoCollectEnabled and "AÇIK" or "KAPALI")
+end
+
+-- No Fall Damage Fonksiyonu
+local function toggleNoFallDamage()
+    noFallDamageEnabled = not noFallDamageEnabled
+    print("🛡️ No Fall Damage:", noFallDamageEnabled and "AÇIK" or "KAPALI")
 end
 
 -- Roll Abilities sürekli kontrol
@@ -1482,7 +1789,7 @@ local function handleSpeed()
 end
 
 -- Ana GUI oluşturma ve event'leri bağlama
-local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, ConsoleButton, RollMenuFrame, rollAbilityButtons, EquipAllButton, RollMenuClose, CloseButton = createModernGUI()
+local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, ESPToggle, SpinToggle, AutoWinToggle, AutoFarmToggle, AutoCollectToggle, NoFallToggle, RollDropdown, RollMenuFrame, rollAbilityButtons, EquipAllButton, RollMenuClose, CloseButton = createModernGUI()
 
 -- Noclip toggle event
 NoclipToggle.MouseButton1Click:Connect(function()
@@ -1648,6 +1955,30 @@ GlassToggle.MouseButton1Click:Connect(function()
     end
 end)
 
+-- ESP toggle event
+ESPToggle.MouseButton1Click:Connect(function()
+    toggleESP()
+    
+    if espEnabled then
+        ESPToggle.Text = "AÇIK"
+        ESPToggle.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        
+        local tween = TweenService:Create(ESPToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 110, 0, 45)
+        })
+        tween:Play()
+        tween.Completed:Connect(function()
+            local tween2 = TweenService:Create(ESPToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 100, 0, 40)
+            })
+            tween2:Play()
+        end)
+    else
+        ESPToggle.Text = "KAPALI"
+        ESPToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    end
+end)
+
 -- Spin Unlock toggle event
 SpinToggle.MouseButton1Click:Connect(function()
     toggleSpinUnlock()
@@ -1696,6 +2027,78 @@ AutoWinToggle.MouseButton1Click:Connect(function()
     end
 end)
 
+-- Auto Farm toggle event
+AutoFarmToggle.MouseButton1Click:Connect(function()
+    toggleAutoFarm()
+    
+    if autoFarmEnabled then
+        AutoFarmToggle.Text = "AÇIK"
+        AutoFarmToggle.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        
+        local tween = TweenService:Create(AutoFarmToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 110, 0, 45)
+        })
+        tween:Play()
+        tween.Completed:Connect(function()
+            local tween2 = TweenService:Create(AutoFarmToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 100, 0, 40)
+            })
+            tween2:Play()
+        end)
+    else
+        AutoFarmToggle.Text = "KAPALI"
+        AutoFarmToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    end
+end)
+
+-- Auto Collect toggle event
+AutoCollectToggle.MouseButton1Click:Connect(function()
+    toggleAutoCollect()
+    
+    if autoCollectEnabled then
+        AutoCollectToggle.Text = "AÇIK"
+        AutoCollectToggle.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        
+        local tween = TweenService:Create(AutoCollectToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 110, 0, 45)
+        })
+        tween:Play()
+        tween.Completed:Connect(function()
+            local tween2 = TweenService:Create(AutoCollectToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 100, 0, 40)
+            })
+            tween2:Play()
+        end)
+    else
+        AutoCollectToggle.Text = "KAPALI"
+        AutoCollectToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    end
+end)
+
+-- No Fall Damage toggle event
+NoFallToggle.MouseButton1Click:Connect(function()
+    toggleNoFallDamage()
+    
+    if noFallDamageEnabled then
+        NoFallToggle.Text = "AÇIK"
+        NoFallToggle.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        
+        local tween = TweenService:Create(NoFallToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 110, 0, 45)
+        })
+        tween:Play()
+        tween.Completed:Connect(function()
+            local tween2 = TweenService:Create(NoFallToggle, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 100, 0, 40)
+            })
+            tween2:Play()
+        end)
+    else
+        NoFallToggle.Text = "KAPALI"
+        NoFallToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    end
+end)
+
 -- Roll Sistemi Otomatik Keşfetme
 local function discoverRollSystem()
     print("🔍 Roll sistemi keşfediliyor...")
@@ -1737,10 +2140,6 @@ local function discoverRollSystem()
     return discoveredSystems
 end
 
--- Console Butonu event
-ConsoleButton.MouseButton1Click:Connect(function()
-    openConsole()
-end)
 
 -- Roll Menu Açma/Kapama
 local function toggleRollMenu()
@@ -1823,17 +2222,27 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     elseif input.KeyCode == Enum.KeyCode.F8 then
         toggleGlassVision()
     elseif input.KeyCode == Enum.KeyCode.F9 then
-        toggleESP()
+        -- F9 zaten console açıyor, ESP'yi başka tuşa taşıyacağız
+        local StarterGui = game:GetService("StarterGui")
+        StarterGui:SetCore("DevConsoleVisible", true)
     elseif input.KeyCode == Enum.KeyCode.F10 then
-        toggleSpinUnlock()
+        toggleESP()
     elseif input.KeyCode == Enum.KeyCode.F11 then
-        toggleAutoWin()
+        toggleSpinUnlock()
     elseif input.KeyCode == Enum.KeyCode.F12 then
+        toggleAutoWin()
+    elseif input.KeyCode == Enum.KeyCode.Insert then
         -- Roll menu aç/kapat
         toggleRollMenu()
-    elseif input.KeyCode == Enum.KeyCode.Insert then
-        -- Console aç
-        openConsole()
+    elseif input.KeyCode == Enum.KeyCode.Home then
+        -- Auto Farm toggle
+        toggleAutoFarm()
+    elseif input.KeyCode == Enum.KeyCode.PageUp then
+        -- Auto Collect toggle
+        toggleAutoCollect()
+    elseif input.KeyCode == Enum.KeyCode.PageDown then
+        -- No Fall Damage toggle
+        toggleNoFallDamage()
     elseif input.KeyCode == Enum.KeyCode.End then
         -- Tüm roll abilities'leri equip et
         equipAllRollAbilities()
@@ -1959,6 +2368,9 @@ RunService.Heartbeat:Connect(function()
     handleSpeed()
     handleAutoWin()
     handleRollAbilities()
+    handleAutoFarm()
+    handleAutoCollect()
+    handleNoFallDamage()
     monitorRollSystem()
 end)
 
@@ -1999,7 +2411,16 @@ end
 -- Roll sistemini otomatik keşfet
 discoverRollSystem()
 
-print("🎨 Ink Game Hack v2.3 yüklendi!")
+print("🎨 Ink Game Hack v2.5 yüklendi!")
+print("=== KATEGORİLENDİRİLMİŞ MENÜ ===")
+print("🎲 ROLL ABILITIES - En üstte, roll ile gelen güçler")
+print("🏃 MOVEMENT - Hareket özellikleri")
+print("⚔️ COMBAT & UTILITY - Savaş ve yardımcı özellikler")
+print("🎮 GAME FEATURES - Oyun özellikleri")
+print("=== YENİ ÖZELLİKLER ===")
+print("🌾 Auto Farm - Otomatik para ve item toplama")
+print("💎 Auto Collect - Otomatik coin toplama")
+print("🛡️ No Fall Damage - Yüksekten düşme hasarı yok")
 print("=== KLAVYE KISAYOLLARI ===")
 print("F1 - Menüyü aç/kapat")
 print("F2 - Noclip aç/kapat")
@@ -2009,11 +2430,14 @@ print("F5 - Uçma modu aç/kapat")
 print("F6 - Sonsuz zıplama aç/kapat")
 print("F7 - God Mode aç/kapat")
 print("F8 - Glass Vision aç/kapat")
-print("F9 - ESP aç/kapat")
-print("F10 - Spin Unlock aç/kapat")
-print("F11 - Auto Win aç/kapat")
-print("F12 - Roll Abilities Menüsü aç/kapat")
-print("Insert - Console aç")
+print("F9 - Console aç (Roblox varsayılan)")
+print("F10 - ESP aç/kapat")
+print("F11 - Spin Unlock aç/kapat")
+print("F12 - Auto Win aç/kapat")
+print("Insert - Roll Abilities Menüsü aç/kapat")
+print("Home - Auto Farm aç/kapat")
+print("PageUp - Auto Collect aç/kapat")
+print("PageDown - No Fall Damage aç/kapat")
 print("End - Tüm Roll Abilities'leri equip et")
 print("=== ÖZELLİKLER ===")
 print("✅ Noclip - Duvarlardan geçme")
@@ -2026,6 +2450,9 @@ print("✅ ESP - Diğer oyuncuları görme")
 print("✅ Hız Ayarı - 16-50 arası hız seçenekleri")
 print("✅ Spin Unlock - Spin ile gelen özellikleri bedavaya aç")
 print("✅ Auto Win - Tüm mini oyunları otomatik kazan")
+print("✅ Auto Farm - Otomatik para ve item toplama")
+print("✅ Auto Collect - Otomatik coin ve item toplama")
+print("✅ No Fall Damage - Yüksekten düşme hasarı almama")
 print("✅ Roll Abilities - Roll ile gelen güçleri bedavaya equip et")
 print("=== YENİ ROLL ABILITIES ===")
 print("⚡ Lightning God - Hasar verirken şimşek çarptırır")
@@ -2051,3 +2478,61 @@ print("=== KULLANIM ===")
 print("Menüyü açmak için F1 tuşuna basın!")
 print("Roll Abilities için dropdown'dan seçin veya F12 ile değiştirin!")
 print("Tüm özellikler modern GUI ile kontrol edilebilir.")
+
+-- Auto Farm sürekli kontrol
+local function handleAutoFarm()
+    if not autoFarmEnabled then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    -- Para ve item toplama
+    for _, obj in pairs(Workspace:GetChildren()) do
+        if obj.Name:lower():find("coin") or obj.Name:lower():find("money") or obj.Name:lower():find("item") then
+            if obj:IsA("BasePart") and obj.Position.Y > -100 then
+                local distance = (character.HumanoidRootPart.Position - obj.Position).Magnitude
+                if distance < 50 then
+                    character.HumanoidRootPart.CFrame = obj.CFrame
+                    wait(0.1)
+                end
+            end
+        end
+    end
+end
+
+-- Auto Collect sürekli kontrol
+local function handleAutoCollect()
+    if not autoCollectEnabled then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    -- ClickDetector'ları otomatik tıkla
+    for _, obj in pairs(Workspace:GetDescendants()) do
+        if obj:IsA("ClickDetector") and obj.Parent and obj.Parent.Name:lower():find("coin") then
+            fireclickdetector(obj)
+        end
+    end
+end
+
+-- No Fall Damage sürekli kontrol
+local function handleNoFallDamage()
+    if not noFallDamageEnabled then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    -- Fall damage'ı engelle
+    if humanoid.Health < humanoid.MaxHealth then
+        humanoid.Health = humanoid.MaxHealth
+    end
+end
