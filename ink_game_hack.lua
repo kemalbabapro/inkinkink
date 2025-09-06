@@ -657,6 +657,122 @@ local function createModernGUI()
     RollInfo.Font = Enum.Font.Gotham
     RollInfo.TextXAlignment = Enum.TextXAlignment.Left
     
+    -- Console Butonu
+    local ConsoleButton = Instance.new("TextButton")
+    ConsoleButton.Name = "ConsoleButton"
+    ConsoleButton.Parent = MainFrame
+    ConsoleButton.Size = UDim2.new(0, 80, 0, 30)
+    ConsoleButton.Position = UDim2.new(1, -90, 0, 10)
+    ConsoleButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    ConsoleButton.BorderSizePixel = 0
+    ConsoleButton.Text = "Console"
+    ConsoleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ConsoleButton.TextScaled = true
+    ConsoleButton.Font = Enum.Font.GothamBold
+    
+    local ConsoleCorner = Instance.new("UICorner")
+    ConsoleCorner.CornerRadius = UDim.new(0, 6)
+    ConsoleCorner.Parent = ConsoleButton
+    
+    -- Roll Abilities Menüsü
+    local RollMenuFrame = Instance.new("Frame")
+    RollMenuFrame.Name = "RollMenuFrame"
+    RollMenuFrame.Parent = MainFrame
+    RollMenuFrame.Size = UDim2.new(0, 300, 0, 400)
+    RollMenuFrame.Position = UDim2.new(1, 10, 0, 50)
+    RollMenuFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    RollMenuFrame.BorderSizePixel = 0
+    RollMenuFrame.Visible = false
+    
+    local RollMenuCorner = Instance.new("UICorner")
+    RollMenuCorner.CornerRadius = UDim.new(0, 12)
+    RollMenuCorner.Parent = RollMenuFrame
+    
+    local RollMenuTitle = Instance.new("TextLabel")
+    RollMenuTitle.Name = "RollMenuTitle"
+    RollMenuTitle.Parent = RollMenuFrame
+    RollMenuTitle.Size = UDim2.new(1, 0, 0, 40)
+    RollMenuTitle.Position = UDim2.new(0, 0, 0, 0)
+    RollMenuTitle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    RollMenuTitle.BorderSizePixel = 0
+    RollMenuTitle.Text = "🎲 Roll Abilities Menu"
+    RollMenuTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    RollMenuTitle.TextScaled = true
+    RollMenuTitle.Font = Enum.Font.GothamBold
+    
+    local RollMenuTitleCorner = Instance.new("UICorner")
+    RollMenuTitleCorner.CornerRadius = UDim.new(0, 12)
+    RollMenuTitleCorner.Parent = RollMenuTitle
+    
+    local RollMenuClose = Instance.new("TextButton")
+    RollMenuClose.Name = "RollMenuClose"
+    RollMenuClose.Parent = RollMenuTitle
+    RollMenuClose.Size = UDim2.new(0, 30, 0, 30)
+    RollMenuClose.Position = UDim2.new(1, -40, 0, 5)
+    RollMenuClose.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+    RollMenuClose.BorderSizePixel = 0
+    RollMenuClose.Text = "×"
+    RollMenuClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+    RollMenuClose.TextScaled = true
+    RollMenuClose.Font = Enum.Font.GothamBold
+    
+    local RollMenuCloseCorner = Instance.new("UICorner")
+    RollMenuCloseCorner.CornerRadius = UDim.new(0, 6)
+    RollMenuCloseCorner.Parent = RollMenuClose
+    
+    local RollMenuScroll = Instance.new("ScrollingFrame")
+    RollMenuScroll.Name = "RollMenuScroll"
+    RollMenuScroll.Parent = RollMenuFrame
+    RollMenuScroll.Size = UDim2.new(1, -10, 1, -50)
+    RollMenuScroll.Position = UDim2.new(0, 5, 0, 45)
+    RollMenuScroll.BackgroundTransparency = 1
+    RollMenuScroll.BorderSizePixel = 0
+    RollMenuScroll.ScrollBarThickness = 6
+    RollMenuScroll.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+    RollMenuScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    
+    -- Roll Abilities Listesi
+    local rollAbilityButtons = {}
+    for i, abilityName in pairs(rollAbilities) do
+        local abilityButton = Instance.new("TextButton")
+        abilityButton.Name = "AbilityButton_" .. i
+        abilityButton.Parent = RollMenuScroll
+        abilityButton.Size = UDim2.new(1, -10, 0, 35)
+        abilityButton.Position = UDim2.new(0, 5, 0, (i-1) * 40)
+        abilityButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        abilityButton.BorderSizePixel = 0
+        abilityButton.Text = abilityName
+        abilityButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        abilityButton.TextScaled = true
+        abilityButton.Font = Enum.Font.Gotham
+        
+        local abilityButtonCorner = Instance.new("UICorner")
+        abilityButtonCorner.CornerRadius = UDim.new(0, 6)
+        abilityButtonCorner.Parent = abilityButton
+        
+        table.insert(rollAbilityButtons, abilityButton)
+    end
+    
+    -- Canvas size'ı ayarla
+    RollMenuScroll.CanvasSize = UDim2.new(0, 0, 0, #rollAbilities * 40)
+    
+    -- Equip All Butonu
+    local EquipAllButton = Instance.new("TextButton")
+    EquipAllButton.Name = "EquipAllButton"
+    EquipAllButton.Parent = RollMenuFrame
+    EquipAllButton.Size = UDim2.new(1, -20, 0, 40)
+    EquipAllButton.Position = UDim2.new(0, 10, 1, -50)
+    EquipAllButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+    EquipAllButton.BorderSizePixel = 0
+    EquipAllButton.Text = "🎯 EQUIP ALL ABILITIES"
+    EquipAllButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    EquipAllButton.TextScaled = true
+    EquipAllButton.Font = Enum.Font.GothamBold
+    
+    local EquipAllCorner = Instance.new("UICorner")
+    EquipAllCorner.CornerRadius = UDim.new(0, 8)
+    EquipAllCorner.Parent = EquipAllButton
+    
     -- Footer
     local FooterFrame = Instance.new("Frame")
     FooterFrame.Name = "FooterFrame"
@@ -681,7 +797,7 @@ local function createModernGUI()
     FooterLabel.TextScaled = true
     FooterLabel.Font = Enum.Font.Gotham
     
-    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, CloseButton
+    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, ConsoleButton, RollMenuFrame, rollAbilityButtons, EquipAllButton, RollMenuClose, CloseButton
 end
 
 -- Roll Abilities Listesi
@@ -879,6 +995,25 @@ local function equipRollAbility(abilityName)
     end
     
     print("🎲 Roll Ability Equipped: " .. abilityName)
+end
+
+-- Tüm Roll Abilities'leri Equip Et
+local function equipAllRollAbilities()
+    print("🎯 Equipping ALL Roll Abilities...")
+    
+    for _, abilityName in pairs(rollAbilities) do
+        wait(0.1) -- Kısa bekleme
+        equipRollAbility(abilityName)
+    end
+    
+    print("🎯 ALL Roll Abilities Equipped!")
+end
+
+-- Console Açma Fonksiyonu
+local function openConsole()
+    local StarterGui = game:GetService("StarterGui")
+    StarterGui:SetCore("DevConsoleVisible", true)
+    print("🖥️ Console açıldı! F9 ile kapatabilirsiniz.")
 end
 
 -- Roll Abilities sürekli kontrol
@@ -1347,7 +1482,7 @@ local function handleSpeed()
 end
 
 -- Ana GUI oluşturma ve event'leri bağlama
-local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, CloseButton = createModernGUI()
+local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, ConsoleButton, RollMenuFrame, rollAbilityButtons, EquipAllButton, RollMenuClose, CloseButton = createModernGUI()
 
 -- Noclip toggle event
 NoclipToggle.MouseButton1Click:Connect(function()
@@ -1602,34 +1737,65 @@ local function discoverRollSystem()
     return discoveredSystems
 end
 
+-- Console Butonu event
+ConsoleButton.MouseButton1Click:Connect(function()
+    openConsole()
+end)
+
+-- Roll Menu Açma/Kapama
+local function toggleRollMenu()
+    RollMenuFrame.Visible = not RollMenuFrame.Visible
+end
+
 -- Roll Dropdown event
 RollDropdown.MouseButton1Click:Connect(function()
-    rollAbilityIndex = rollAbilityIndex + 1
-    if rollAbilityIndex > #rollAbilities then
-        rollAbilityIndex = 1
-    end
-    
-    local selectedAbility = rollAbilities[rollAbilityIndex]
-    RollDropdown.Text = selectedAbility
-    
-    -- Roll sistemini keşfet
-    discoverRollSystem()
-    
-    -- Seçilen ability'yi equip et
-    equipRollAbility(selectedAbility)
+    toggleRollMenu()
+end)
+
+-- Roll Menu Close event
+RollMenuClose.MouseButton1Click:Connect(function()
+    RollMenuFrame.Visible = false
+end)
+
+-- Equip All Button event
+EquipAllButton.MouseButton1Click:Connect(function()
+    equipAllRollAbilities()
     
     -- Animasyon efekti
-    local tween = TweenService:Create(RollDropdown, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+    local tween = TweenService:Create(EquipAllButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
         Size = UDim2.new(1, -25, 0, 45)
     })
     tween:Play()
     tween.Completed:Connect(function()
-        local tween2 = TweenService:Create(RollDropdown, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+        local tween2 = TweenService:Create(EquipAllButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
             Size = UDim2.new(1, -20, 0, 40)
         })
         tween2:Play()
     end)
 end)
+
+-- Roll Ability Butonları event'leri
+for i, abilityButton in pairs(rollAbilityButtons) do
+    abilityButton.MouseButton1Click:Connect(function()
+        local abilityName = rollAbilities[i]
+        equipRollAbility(abilityName)
+        
+        -- Buton rengini değiştir
+        abilityButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        
+        -- Animasyon efekti
+        local tween = TweenService:Create(abilityButton, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(1, -15, 0, 40)
+        })
+        tween:Play()
+        tween.Completed:Connect(function()
+            local tween2 = TweenService:Create(abilityButton, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(1, -10, 0, 35)
+            })
+            tween2:Play()
+        end)
+    end)
+end
 
 -- Kapatma butonu event
 CloseButton.MouseButton1Click:Connect(function()
@@ -1663,14 +1829,14 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     elseif input.KeyCode == Enum.KeyCode.F11 then
         toggleAutoWin()
     elseif input.KeyCode == Enum.KeyCode.F12 then
-        -- Roll ability değiştir
-        rollAbilityIndex = rollAbilityIndex + 1
-        if rollAbilityIndex > #rollAbilities then
-            rollAbilityIndex = 1
-        end
-        local selectedAbility = rollAbilities[rollAbilityIndex]
-        equipRollAbility(selectedAbility)
-        RollDropdown.Text = selectedAbility
+        -- Roll menu aç/kapat
+        toggleRollMenu()
+    elseif input.KeyCode == Enum.KeyCode.Insert then
+        -- Console aç
+        openConsole()
+    elseif input.KeyCode == Enum.KeyCode.End then
+        -- Tüm roll abilities'leri equip et
+        equipAllRollAbilities()
     end
 end)
 
@@ -1833,7 +1999,7 @@ end
 -- Roll sistemini otomatik keşfet
 discoverRollSystem()
 
-print("🎨 Ink Game Hack v2.2 yüklendi!")
+print("🎨 Ink Game Hack v2.3 yüklendi!")
 print("=== KLAVYE KISAYOLLARI ===")
 print("F1 - Menüyü aç/kapat")
 print("F2 - Noclip aç/kapat")
@@ -1846,7 +2012,9 @@ print("F8 - Glass Vision aç/kapat")
 print("F9 - ESP aç/kapat")
 print("F10 - Spin Unlock aç/kapat")
 print("F11 - Auto Win aç/kapat")
-print("F12 - Roll Ability değiştir")
+print("F12 - Roll Abilities Menüsü aç/kapat")
+print("Insert - Console aç")
+print("End - Tüm Roll Abilities'leri equip et")
 print("=== ÖZELLİKLER ===")
 print("✅ Noclip - Duvarlardan geçme")
 print("✅ Teleport - Red Light Green Light'ta ışınlanma")
