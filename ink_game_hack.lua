@@ -709,51 +709,172 @@ local rollAbilities = {
 
 local rollAbilityIndex = 1
 
--- Roll Abilities Fonksiyonu
-local function equipRollAbility(abilityName)
-    currentRollAbility = abilityName
-    rollAbilitiesEnabled = true
+-- Roll Sistemi Analiz ve Entegrasyon
+local function analyzeRollSystem()
+    local rollData = {
+        remoteEvents = {},
+        guis = {},
+        buttons = {},
+        functions = {}
+    }
     
-    local character = player.Character
-    if not character then return end
-    
-    local humanoid = character:FindFirstChild("Humanoid")
-    if not humanoid then return end
-    
-    -- RemoteEvent'leri bul ve tetikle
+    -- ReplicatedStorage'da roll ile ilgili objeleri bul
     local replicatedStorage = game:GetService("ReplicatedStorage")
-    local remoteEvents = {}
-    
-    -- Roll ile ilgili RemoteEvent'leri bul
     for _, obj in pairs(replicatedStorage:GetChildren()) do
-        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-            if obj.Name:lower():find("roll") or obj.Name:lower():find("ability") or obj.Name:lower():find("power") then
-                table.insert(remoteEvents, obj)
+        local name = obj.Name:lower()
+        if name:find("roll") or name:find("ability") or name:find("power") or name:find("skill") or name:find("talent") then
+            if obj:IsA("RemoteEvent") then
+                table.insert(rollData.remoteEvents, obj)
+            elseif obj:IsA("RemoteFunction") then
+                table.insert(rollData.functions, obj)
             end
         end
     end
     
-    -- PlayerGui'deki roll GUI'lerini kontrol et
+    -- PlayerGui'de roll GUI'lerini bul
     local playerGui = player.PlayerGui
     for _, gui in pairs(playerGui:GetChildren()) do
-        if gui.Name:lower():find("roll") or gui.Name:lower():find("ability") or gui.Name:lower():find("power") then
-            gui.Enabled = true
+        local name = gui.Name:lower()
+        if name:find("roll") or name:find("ability") or name:find("power") or name:find("skill") or name:find("talent") or name:find("menu") then
+            table.insert(rollData.guis, gui)
             
-            -- Ability seçim butonlarını bul
+            -- GUI içindeki butonları bul
             for _, child in pairs(gui:GetDescendants()) do
-                if child:IsA("TextButton") and child.Text:lower():find(abilityName:lower()) then
-                    child.Activated:Fire()
+                if child:IsA("TextButton") or child:IsA("ImageButton") then
+                    table.insert(rollData.buttons, child)
                 end
             end
         end
     end
     
-    -- RemoteEvent'leri tetikle
-    for _, remoteEvent in pairs(remoteEvents) do
-        if remoteEvent:IsA("RemoteEvent") then
+    -- Workspace'de roll objelerini bul
+    local workspace = game:GetService("Workspace")
+    for _, obj in pairs(workspace:GetChildren()) do
+        local name = obj.Name:lower()
+        if name:find("roll") or name:find("ability") or name:find("power") or name:find("skill") or name:find("talent") then
+            if obj:IsA("ClickDetector") then
+                table.insert(rollData.buttons, obj)
+            end
+        end
+    end
+    
+    return rollData
+end
+
+-- Roll Abilities Fonksiyonu - Gelişmiş Entegrasyon
+local function equipRollAbility(abilityName)
+    currentRollAbility = abilityName
+    rollAbilitiesEnabled = true
+    
+    print("🎲 Attempting to equip: " .. abilityName)
+    
+    -- Roll sistemini analiz et
+    local rollData = analyzeRollSystem()
+    
+    -- 1. RemoteEvent'leri dene
+    for _, remoteEvent in pairs(rollData.remoteEvents) do
+        pcall(function()
             remoteEvent:FireServer(abilityName)
-        elseif remoteEvent:IsA("RemoteFunction") then
-            remoteEvent:InvokeServer(abilityName)
+            print("✅ Fired RemoteEvent:", remoteEvent.Name)
+        end)
+        
+        -- Farklı parametrelerle dene
+        pcall(function()
+            remoteEvent:FireServer({ability = abilityName})
+            print("✅ Fired RemoteEvent with table:", remoteEvent.Name)
+        end)
+        
+        pcall(function()
+            remoteEvent:FireServer(abilityName:lower())
+            print("✅ Fired RemoteEvent with lowercase:", remoteEvent.Name)
+        end)
+    end
+    
+    -- 2. RemoteFunction'ları dene
+    for _, remoteFunction in pairs(rollData.functions) do
+        pcall(function()
+            local result = remoteFunction:InvokeServer(abilityName)
+            print("✅ Invoked RemoteFunction:", remoteFunction.Name, "Result:", result)
+        end)
+    end
+    
+    -- 3. GUI butonlarını tıkla
+    for _, button in pairs(rollData.buttons) do
+        if button:IsA("TextButton") or button:IsA("ImageButton") then
+            local text = button.Text or ""
+            if text:lower():find(abilityName:lower()) or text:lower():find("roll") or text:lower():find("spin") then
+                pcall(function()
+                    button.Activated:Fire()
+                    print("✅ Clicked GUI button:", text)
+                end)
+            end
+        elseif button:IsA("ClickDetector") then
+            pcall(function()
+                fireclickdetector(button)
+                print("✅ Clicked ClickDetector")
+            end)
+        end
+    end
+    
+    -- 4. Özel roll sistemleri dene
+    local specialRollSystems = {
+        "RollSystem",
+        "AbilitySystem", 
+        "PowerSystem",
+        "SkillSystem",
+        "TalentSystem",
+        "GameSystem",
+        "PlayerSystem"
+    }
+    
+    for _, systemName in pairs(specialRollSystems) do
+        -- ReplicatedStorage'da sistem ara
+        local system = replicatedStorage:FindFirstChild(systemName)
+        if system then
+            for _, child in pairs(system:GetChildren()) do
+                if child:IsA("RemoteEvent") then
+                    pcall(function()
+                        child:FireServer(abilityName)
+                        print("✅ Fired system RemoteEvent:", systemName, child.Name)
+                    end)
+                elseif child:IsA("RemoteFunction") then
+                    pcall(function()
+                        child:InvokeServer(abilityName)
+                        print("✅ Invoked system RemoteFunction:", systemName, child.Name)
+                    end)
+                end
+            end
+        end
+        
+        -- PlayerGui'de sistem ara
+        local guiSystem = playerGui:FindFirstChild(systemName)
+        if guiSystem then
+            for _, child in pairs(guiSystem:GetDescendants()) do
+                if child:IsA("TextButton") and child.Text:lower():find(abilityName:lower()) then
+                    pcall(function()
+                        child.Activated:Fire()
+                        print("✅ Clicked system button:", systemName, child.Text)
+                    end)
+                end
+            end
+        end
+    end
+    
+    -- 5. Genel roll butonlarını ara ve tıkla
+    local generalRollButtons = {"Roll", "Spin", "Play", "Start", "Select", "Choose", "Pick"}
+    for _, gui in pairs(rollData.guis) do
+        for _, button in pairs(gui:GetDescendants()) do
+            if button:IsA("TextButton") or button:IsA("ImageButton") then
+                local text = button.Text or ""
+                for _, rollText in pairs(generalRollButtons) do
+                    if text:lower():find(rollText:lower()) then
+                        pcall(function()
+                            button.Activated:Fire()
+                            print("✅ Clicked general roll button:", text)
+                        end)
+                    end
+                end
+            end
         end
     end
     
@@ -1440,6 +1561,47 @@ AutoWinToggle.MouseButton1Click:Connect(function()
     end
 end)
 
+-- Roll Sistemi Otomatik Keşfetme
+local function discoverRollSystem()
+    print("🔍 Roll sistemi keşfediliyor...")
+    
+    local discoveredSystems = {}
+    
+    -- ReplicatedStorage'da roll sistemlerini keşfet
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    for _, obj in pairs(replicatedStorage:GetChildren()) do
+        local name = obj.Name:lower()
+        if name:find("roll") or name:find("ability") or name:find("power") or name:find("skill") or name:find("talent") or name:find("game") then
+            table.insert(discoveredSystems, {name = obj.Name, type = obj.ClassName, location = "ReplicatedStorage"})
+        end
+    end
+    
+    -- PlayerGui'de roll sistemlerini keşfet
+    local playerGui = player.PlayerGui
+    for _, gui in pairs(playerGui:GetChildren()) do
+        local name = gui.Name:lower()
+        if name:find("roll") or name:find("ability") or name:find("power") or name:find("skill") or name:find("talent") or name:find("menu") or name:find("game") then
+            table.insert(discoveredSystems, {name = gui.Name, type = gui.ClassName, location = "PlayerGui"})
+        end
+    end
+    
+    -- Workspace'de roll sistemlerini keşfet
+    local workspace = game:GetService("Workspace")
+    for _, obj in pairs(workspace:GetChildren()) do
+        local name = obj.Name:lower()
+        if name:find("roll") or name:find("ability") or name:find("power") or name:find("skill") or name:find("talent") or name:find("game") then
+            table.insert(discoveredSystems, {name = obj.Name, type = obj.ClassName, location = "Workspace"})
+        end
+    end
+    
+    print("🎯 Keşfedilen roll sistemleri:")
+    for _, system in pairs(discoveredSystems) do
+        print("  - " .. system.name .. " (" .. system.type .. ") in " .. system.location)
+    end
+    
+    return discoveredSystems
+end
+
 -- Roll Dropdown event
 RollDropdown.MouseButton1Click:Connect(function()
     rollAbilityIndex = rollAbilityIndex + 1
@@ -1449,6 +1611,9 @@ RollDropdown.MouseButton1Click:Connect(function()
     
     local selectedAbility = rollAbilities[rollAbilityIndex]
     RollDropdown.Text = selectedAbility
+    
+    -- Roll sistemini keşfet
+    discoverRollSystem()
     
     -- Seçilen ability'yi equip et
     equipRollAbility(selectedAbility)
@@ -1605,6 +1770,19 @@ local function handleInfiniteJump()
     end
 end
 
+-- Roll Sistemi Sürekli İzleme
+local function monitorRollSystem()
+    if not rollAbilitiesEnabled then return end
+    
+    -- Roll sisteminin değişip değişmediğini kontrol et
+    local currentSystems = discoverRollSystem()
+    
+    -- Eğer yeni sistemler keşfedilirse, roll ability'yi yeniden dene
+    if #currentSystems > 0 then
+        equipRollAbility(currentRollAbility)
+    end
+end
+
 -- Sürekli kontrol
 RunService.Heartbeat:Connect(function()
     checkForRedLight()
@@ -1615,6 +1793,7 @@ RunService.Heartbeat:Connect(function()
     handleSpeed()
     handleAutoWin()
     handleRollAbilities()
+    monitorRollSystem()
 end)
 
 -- Karakter spawn olduğunda ayarları uygula
@@ -1650,6 +1829,9 @@ if player.Character then
         humanoid.JumpPower = 50
     end
 end
+
+-- Roll sistemini otomatik keşfet
+discoverRollSystem()
 
 print("🎨 Ink Game Hack v2.2 yüklendi!")
 print("=== KLAVYE KISAYOLLARI ===")
