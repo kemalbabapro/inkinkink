@@ -25,6 +25,8 @@ local autoDalgonaEnabled = false
 local autoTugOfWarEnabled = false
 local spinUnlockEnabled = false
 local autoWinEnabled = false
+local rollAbilitiesEnabled = false
+local currentRollAbility = "None"
 local currentSpeed = 16
 local speeds = {16, 20, 25, 30, 35, 40, 45, 50}
 local speedIndex = 1
@@ -602,6 +604,59 @@ local function createModernGUI()
     AutoWinInfo.Font = Enum.Font.Gotham
     AutoWinInfo.TextXAlignment = Enum.TextXAlignment.Left
     
+    -- Roll Abilities Bölümü
+    local RollFrame = Instance.new("Frame")
+    RollFrame.Name = "RollFrame"
+    RollFrame.Parent = ContentFrame
+    RollFrame.Size = UDim2.new(1, 0, 0, 120)
+    RollFrame.Position = UDim2.new(0, 0, 0, 1170)
+    RollFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    RollFrame.BorderSizePixel = 0
+    
+    local RollCorner = Instance.new("UICorner")
+    RollCorner.CornerRadius = UDim.new(0, 8)
+    RollCorner.Parent = RollFrame
+    
+    local RollTitle = Instance.new("TextLabel")
+    RollTitle.Name = "RollTitle"
+    RollTitle.Parent = RollFrame
+    RollTitle.Size = UDim2.new(1, -20, 0, 30)
+    RollTitle.Position = UDim2.new(0, 10, 0, 10)
+    RollTitle.BackgroundTransparency = 1
+    RollTitle.Text = "🎲 Roll Abilities"
+    RollTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    RollTitle.TextScaled = true
+    RollTitle.Font = Enum.Font.GothamBold
+    RollTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local RollDropdown = Instance.new("TextButton")
+    RollDropdown.Name = "RollDropdown"
+    RollDropdown.Parent = RollFrame
+    RollDropdown.Size = UDim2.new(1, -20, 0, 40)
+    RollDropdown.Position = UDim2.new(0, 10, 0, 50)
+    RollDropdown.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    RollDropdown.BorderSizePixel = 0
+    RollDropdown.Text = "Özellik Seçin..."
+    RollDropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
+    RollDropdown.TextScaled = true
+    RollDropdown.Font = Enum.Font.Gotham
+    
+    local RollDropdownCorner = Instance.new("UICorner")
+    RollDropdownCorner.CornerRadius = UDim.new(0, 8)
+    RollDropdownCorner.Parent = RollDropdown
+    
+    local RollInfo = Instance.new("TextLabel")
+    RollInfo.Name = "RollInfo"
+    RollInfo.Parent = RollFrame
+    RollInfo.Size = UDim2.new(1, -20, 0, 20)
+    RollInfo.Position = UDim2.new(0, 10, 0, 100)
+    RollInfo.BackgroundTransparency = 1
+    RollInfo.Text = "Roll ile gelen özellikleri bedavaya equip et"
+    RollInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+    RollInfo.TextScaled = true
+    RollInfo.Font = Enum.Font.Gotham
+    RollInfo.TextXAlignment = Enum.TextXAlignment.Left
+    
     -- Footer
     local FooterFrame = Instance.new("Frame")
     FooterFrame.Name = "FooterFrame"
@@ -626,7 +681,210 @@ local function createModernGUI()
     FooterLabel.TextScaled = true
     FooterLabel.Font = Enum.Font.Gotham
     
-    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, CloseButton
+    return ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, CloseButton
+end
+
+-- Roll Abilities Listesi
+local rollAbilities = {
+    "Lightning God",
+    "The Doctor", 
+    "Time Stop",
+    "Ultra Instinct",
+    "Medic",
+    "Phantom Step",
+    "Teleporting Gambit",
+    "Baseball Star",
+    "Hercules",
+    "Parkour Artist",
+    "Trickster",
+    "Blackflash",
+    "Quicksilver",
+    "Player 100",
+    "Super Strength",
+    "Bulldozer",
+    "Weapon Smuggler",
+    "Sharp Shooter",
+    "Player 120"
+}
+
+local rollAbilityIndex = 1
+
+-- Roll Abilities Fonksiyonu
+local function equipRollAbility(abilityName)
+    currentRollAbility = abilityName
+    rollAbilitiesEnabled = true
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    -- RemoteEvent'leri bul ve tetikle
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    local remoteEvents = {}
+    
+    -- Roll ile ilgili RemoteEvent'leri bul
+    for _, obj in pairs(replicatedStorage:GetChildren()) do
+        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
+            if obj.Name:lower():find("roll") or obj.Name:lower():find("ability") or obj.Name:lower():find("power") then
+                table.insert(remoteEvents, obj)
+            end
+        end
+    end
+    
+    -- PlayerGui'deki roll GUI'lerini kontrol et
+    local playerGui = player.PlayerGui
+    for _, gui in pairs(playerGui:GetChildren()) do
+        if gui.Name:lower():find("roll") or gui.Name:lower():find("ability") or gui.Name:lower():find("power") then
+            gui.Enabled = true
+            
+            -- Ability seçim butonlarını bul
+            for _, child in pairs(gui:GetDescendants()) do
+                if child:IsA("TextButton") and child.Text:lower():find(abilityName:lower()) then
+                    child.Activated:Fire()
+                end
+            end
+        end
+    end
+    
+    -- RemoteEvent'leri tetikle
+    for _, remoteEvent in pairs(remoteEvents) do
+        if remoteEvent:IsA("RemoteEvent") then
+            remoteEvent:FireServer(abilityName)
+        elseif remoteEvent:IsA("RemoteFunction") then
+            remoteEvent:InvokeServer(abilityName)
+        end
+    end
+    
+    print("🎲 Roll Ability Equipped: " .. abilityName)
+end
+
+-- Roll Abilities sürekli kontrol
+local function handleRollAbilities()
+    if not rollAbilitiesEnabled or currentRollAbility == "None" then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    -- Seçilen ability'ye göre özel davranışlar
+    if currentRollAbility == "Lightning God" then
+        -- Lightning God özellikleri
+        if humanoid.Health < humanoid.MaxHealth * 0.25 then
+            humanoid.Health = humanoid.MaxHealth * 0.25 -- %25 heal
+        end
+    elseif currentRollAbility == "The Doctor" then
+        -- The Doctor özellikleri
+        if humanoid.Health < humanoid.MaxHealth * 0.5 then
+            humanoid.Health = humanoid.MaxHealth -- Full heal
+        end
+    elseif currentRollAbility == "Ultra Instinct" then
+        -- Ultra Instinct özellikleri
+        humanoid.WalkSpeed = currentSpeed * 1.5
+    elseif currentRollAbility == "Medic" then
+        -- Medic özellikleri
+        if humanoid.Health < humanoid.MaxHealth then
+            humanoid.Health = humanoid.Health + 1 -- Slow heal
+        end
+    elseif currentRollAbility == "Phantom Step" then
+        -- Phantom Step özellikleri
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                local camera = Workspace.CurrentCamera
+                local direction = camera.CFrame.LookVector
+                humanoidRootPart.CFrame = humanoidRootPart.CFrame + direction * 20
+            end
+        end
+    elseif currentRollAbility == "Teleporting Gambit" then
+        -- Teleporting Gambit özellikleri
+        if UserInputService:IsKeyDown(Enum.KeyCode.E) then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                local camera = Workspace.CurrentCamera
+                local direction = camera.CFrame.LookVector
+                humanoidRootPart.CFrame = humanoidRootPart.CFrame + direction * 50
+            end
+        end
+    elseif currentRollAbility == "Baseball Star" then
+        -- Baseball Star özellikleri
+        local backpack = player:FindFirstChild("Backpack")
+        if backpack then
+            local baseballBat = backpack:FindFirstChild("BaseballBat")
+            if not baseballBat then
+                -- Baseball bat spawn et
+                local tool = Instance.new("Tool")
+                tool.Name = "BaseballBat"
+                tool.Parent = backpack
+            end
+        end
+    elseif currentRollAbility == "Hercules" then
+        -- Hercules özellikleri
+        humanoid.WalkSpeed = currentSpeed * 0.8 -- Slower but stronger
+    elseif currentRollAbility == "Parkour Artist" then
+        -- Parkour Artist özellikleri
+        humanoid.JumpPower = 100
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            humanoid.Jump = true
+        end
+    elseif currentRollAbility == "Trickster" then
+        -- Trickster özellikleri
+        if UserInputService:IsKeyDown(Enum.KeyCode.Q) then
+            -- Banana peel spawn
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                local bananaPeel = Instance.new("Part")
+                bananaPeel.Name = "BananaPeel"
+                bananaPeel.Size = Vector3.new(2, 0.2, 2)
+                bananaPeel.Position = humanoidRootPart.Position
+                bananaPeel.BrickColor = BrickColor.new("Bright yellow")
+                bananaPeel.Parent = Workspace
+            end
+        end
+    elseif currentRollAbility == "Quicksilver" then
+        -- Quicksilver özellikleri
+        humanoid.WalkSpeed = currentSpeed * 2
+    elseif currentRollAbility == "Super Strength" then
+        -- Super Strength özellikleri
+        humanoid.WalkSpeed = currentSpeed * 0.7 -- Slower but stronger
+    elseif currentRollAbility == "Bulldozer" then
+        -- Bulldozer özellikleri
+        if UserInputService:IsKeyDown(Enum.KeyCode.R) then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                local camera = Workspace.CurrentCamera
+                local direction = camera.CFrame.LookVector
+                humanoidRootPart.CFrame = humanoidRootPart.CFrame + direction * 30
+            end
+        end
+    elseif currentRollAbility == "Weapon Smuggler" then
+        -- Weapon Smuggler özellikleri
+        local backpack = player:FindFirstChild("Backpack")
+        if backpack then
+            local weapon = backpack:FindFirstChild("SpecialWeapon")
+            if not weapon then
+                -- Special weapon spawn et
+                local tool = Instance.new("Tool")
+                tool.Name = "SpecialWeapon"
+                tool.Parent = backpack
+            end
+        end
+    elseif currentRollAbility == "Sharp Shooter" then
+        -- Sharp Shooter özellikleri
+        local backpack = player:FindFirstChild("Backpack")
+        if backpack then
+            local revolver = backpack:FindFirstChild("Revolver")
+            if not revolver then
+                -- Revolver spawn et
+                local tool = Instance.new("Tool")
+                tool.Name = "Revolver"
+                tool.Parent = backpack
+            end
+        end
+    end
 end
 
 -- Yeni özellik fonksiyonları
@@ -968,7 +1226,7 @@ local function handleSpeed()
 end
 
 -- Ana GUI oluşturma ve event'leri bağlama
-local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, CloseButton = createModernGUI()
+local ScreenGui, MainFrame, NoclipToggle, TeleportToggle, SpeedSlider, FlyToggle, JumpToggle, GodToggle, GlassToggle, SpinToggle, AutoWinToggle, RollDropdown, CloseButton = createModernGUI()
 
 -- Noclip toggle event
 NoclipToggle.MouseButton1Click:Connect(function()
@@ -1182,6 +1440,32 @@ AutoWinToggle.MouseButton1Click:Connect(function()
     end
 end)
 
+-- Roll Dropdown event
+RollDropdown.MouseButton1Click:Connect(function()
+    rollAbilityIndex = rollAbilityIndex + 1
+    if rollAbilityIndex > #rollAbilities then
+        rollAbilityIndex = 1
+    end
+    
+    local selectedAbility = rollAbilities[rollAbilityIndex]
+    RollDropdown.Text = selectedAbility
+    
+    -- Seçilen ability'yi equip et
+    equipRollAbility(selectedAbility)
+    
+    -- Animasyon efekti
+    local tween = TweenService:Create(RollDropdown, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+        Size = UDim2.new(1, -25, 0, 45)
+    })
+    tween:Play()
+    tween.Completed:Connect(function()
+        local tween2 = TweenService:Create(RollDropdown, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(1, -20, 0, 40)
+        })
+        tween2:Play()
+    end)
+end)
+
 -- Kapatma butonu event
 CloseButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
@@ -1213,6 +1497,15 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         toggleSpinUnlock()
     elseif input.KeyCode == Enum.KeyCode.F11 then
         toggleAutoWin()
+    elseif input.KeyCode == Enum.KeyCode.F12 then
+        -- Roll ability değiştir
+        rollAbilityIndex = rollAbilityIndex + 1
+        if rollAbilityIndex > #rollAbilities then
+            rollAbilityIndex = 1
+        end
+        local selectedAbility = rollAbilities[rollAbilityIndex]
+        equipRollAbility(selectedAbility)
+        RollDropdown.Text = selectedAbility
     end
 end)
 
@@ -1321,6 +1614,7 @@ RunService.Heartbeat:Connect(function()
     handleGodMode()
     handleSpeed()
     handleAutoWin()
+    handleRollAbilities()
 end)
 
 -- Karakter spawn olduğunda ayarları uygula
@@ -1357,7 +1651,7 @@ if player.Character then
     end
 end
 
-print("🎨 Ink Game Hack v2.1 yüklendi!")
+print("🎨 Ink Game Hack v2.2 yüklendi!")
 print("=== KLAVYE KISAYOLLARI ===")
 print("F1 - Menüyü aç/kapat")
 print("F2 - Noclip aç/kapat")
@@ -1370,6 +1664,7 @@ print("F8 - Glass Vision aç/kapat")
 print("F9 - ESP aç/kapat")
 print("F10 - Spin Unlock aç/kapat")
 print("F11 - Auto Win aç/kapat")
+print("F12 - Roll Ability değiştir")
 print("=== ÖZELLİKLER ===")
 print("✅ Noclip - Duvarlardan geçme")
 print("✅ Teleport - Red Light Green Light'ta ışınlanma")
@@ -1381,9 +1676,28 @@ print("✅ ESP - Diğer oyuncuları görme")
 print("✅ Hız Ayarı - 16-50 arası hız seçenekleri")
 print("✅ Spin Unlock - Spin ile gelen özellikleri bedavaya aç")
 print("✅ Auto Win - Tüm mini oyunları otomatik kazan")
-print("=== YENİ ÖZELLİKLER ===")
-print("🎰 Spin Unlock - Spin wheel ödüllerini bedavaya aç")
-print("🏆 Auto Win - Red Light, Dalgona, Tug of War, Jump Rope")
+print("✅ Roll Abilities - Roll ile gelen güçleri bedavaya equip et")
+print("=== YENİ ROLL ABILITIES ===")
+print("⚡ Lightning God - Hasar verirken şimşek çarptırır")
+print("👨‍⚕️ The Doctor - Ölümden dirilme ve iyileştirme")
+print("⏰ Time Stop - 90 saniyede bir oyuncuları dondurur")
+print("🥋 Ultra Instinct - 5 dodge ve hız artışı")
+print("🏥 Medic - Bandaj düşürme ve taşıma hızı")
+print("👻 Phantom Step - 3 hızlı dash")
+print("🔄 Teleporting Gambit - E ile teleport (E tuşu)")
+print("⚾ Baseball Star - Baseball bat spawn eder")
+print("💪 Hercules - Oyuncuları kaldırıp fırlatma")
+print("🏃 Parkour Artist - Çift zıplama ve kayma")
+print("🍌 Trickster - Muz kabuğu düşürme (Q tuşu)")
+print("⚡ Blackflash - Güçlü saldırı")
+print("💨 Quicksilver - Yavaştan hızlıya")
+print("🛡️ Player 100 - 10 saniye ragdoll + iyileşme")
+print("💪 Super Strength - 3x itme gücü")
+print("🚜 Bulldozer - İleri koşma (R tuşu)")
+print("🔫 Weapon Smuggler - Özel silah spawn")
+print("🎯 Sharp Shooter - Revolver spawn")
+print("👤 Player 120 - Yakındaki düşmanları indirme")
 print("=== KULLANIM ===")
 print("Menüyü açmak için F1 tuşuna basın!")
+print("Roll Abilities için dropdown'dan seçin veya F12 ile değiştirin!")
 print("Tüm özellikler modern GUI ile kontrol edilebilir.")
